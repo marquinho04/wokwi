@@ -58,8 +58,16 @@ public:
         if (row < 0 || row >= rowCount || text == nullptr) {
             return;
         }
+        // Copy the text and pad with spaces (no printf "%-*s": not supported on Arduino Uno)
         char padded[MAXIMUM_COLUMNS + 1];
-        snprintf(padded, columnCount + 1, "%-*s", columnCount, text);
+        int column = 0;
+        for (; column < columnCount && text[column] != '\0'; column++) {
+            padded[column] = text[column];
+        }
+        for (; column < columnCount; column++) {
+            padded[column] = ' ';
+        }
+        padded[columnCount] = '\0';
         if (strcmp(padded, lines[row]) != 0) {
             strcpy(lines[row], padded);
             changed[row] = true;

@@ -15,9 +15,11 @@ Guía paso a paso para crear un proyecto IoT en Wokwi con OOP y el enfoque Modes
 | [docs/05-arduino-uno-vs-esp32.md](docs/05-arduino-uno-vs-esp32.md) | Diferencias entre las dos placas |
 | [docs/06-kit-generico.md](docs/06-kit-generico.md) | Referencia del kit: cada clase, su constructor, sus eventos y su librería |
 | [kit/](kit) | **El kit genérico:** 8 archivos `.h` reutilizables en casi cualquier caso |
-| [estudio/](estudio) | **Mismo código del kit y los ejemplos, con comentarios en español** línea por línea. Para estudiar, no para entregar |
+| [estudio/](estudio) | **Mismo código del kit y los ejemplos, con comentarios en español** línea por línea (los ejemplos mínimos, en `estudio/minimos/`). Para estudiar, no para entregar |
 | [ejemplos/](ejemplos) | El kit aplicado a 2 casos: Smart LifeWatching (Uno y ESP32) y Cia Steel Faucet de Moen (ESP32) |
+| [ejemplos-minimos/](ejemplos-minimos) | **Versión para el examen:** los mismos casos con el Device reducido (~50 y ~70 líneas), comentado en inglés |
 | [caso/README.md](caso/README.md) | Caso Smart Lifemonitor: Pregunta 1 resuelta, decisiones de diseño y pruebas |
+| [referencia-extendida/](referencia-extendida) | Primera versión de Smart LifeWatching (22 archivos, `.h` + `.cpp`), para estudiar el patrón con más detalle. No incluye las correcciones posteriores de la balanza: para usar en Wokwi, prefiere `kit/` |
 
 ## El kit genérico
 
@@ -36,7 +38,7 @@ En un caso nuevo solo escribes el **Device** (las reglas del caso), `sketch.ino`
 
 ## Uso rápido
 
-1. Lee las guías [01](docs/01-crear-proyecto-wokwi.md) y [02](docs/02-de-caso-a-codigo.md) y repasa el kit con la [guía 06](docs/06-kit-generico.md).
+1. Lee las guías [01](docs/01-crear-proyecto-wokwi.md) y [02](docs/02-de-caso-a-codigo.md) y repasa el kit con la [guía 06](docs/06-kit-generico.md). Para entender el código, lee [`estudio/`](estudio).
 2. Prueba un ejemplo: crea un proyecto en Wokwi con la placa correspondiente, sube los archivos de la carpeta del ejemplo con **Upload file(s)...**, reemplaza `diagram.json` y agrega las librerías de su `libraries.txt`.
 3. Practica con un caso nuevo: copia `ModestIoT.h` y los archivos del kit que necesites, escribe solo el Device y revísalo con el [checklist](docs/04-rubrica-y-checklist.md).
 
@@ -50,4 +52,4 @@ Reemplaza los placeholders en todos los archivos:
 
 ## Estado de verificación
 
-El kit y los ejemplos se compilaron con stubs de Arduino (C++11 y C++17, en modo Uno y en modo ESP32) y se simularon con los casos de las tablas de prueba: todos dieron los resultados esperados. **No se ejecutaron dentro de Wokwi**, así que pruébalos ahí antes de entregar.
+El kit y los ejemplos se compilaron con stubs de Arduino (C++11 y C++17, en modo Uno y en modo ESP32) y se simularon con los casos de las tablas de prueba: todos dieron los resultados esperados. El ejemplo mínimo de Smart LifeWatching se probó además en Wokwi (Arduino Uno), y ahí se encontró y corrigió el error de la LCD. El `WeightSensor.h` actual (sin espera ni tara) solo se probó fuera de Wokwi, igual que el resto: pruébalo ahí antes de entregar.

@@ -25,12 +25,12 @@ El [kit](../kit) son 8 archivos `.h` que cubren los componentes más comunes de 
 | `DigitalSensor` | `(id, pin, activeLow, this)` | 1 activo / 0 inactivo; también `isActive()` | `CHANGED`, solo cuando cambia | — |
 | `UltrasonicSensor` | `(id, triggerPin, echoPin, this)` | Distancia en cm | `MEASURED`; `FAULT` si no hay eco | — |
 | `DhtSensor` | `(id, pin, this)` | Temperatura °C; también `getHumidity()` | `MEASURED`; `FAULT` si la lectura es NaN | `DHT sensor library` |
-| `WeightSensor` | `(id, dataPin, clockPin, countsPerKilogram, this)` | Peso en kg (negativos → 0) | `MEASURED`; `FAULT` si el HX711 no responde | `HX711 Arduino Library` |
+| `WeightSensor` | `(id, dataPin, clockPin, countsPerKilogram, this)` | Peso en kg (negativos → 0) | `MEASURED` cuando hay dato listo; `FAULT` si no llegan datos durante 2 s | `HX711 Arduino Library` |
 
 Notas:
 - `AnalogSensor` sirve para todo lo que Wokwi simula con un valor analógico: potenciómetro, fotoresistencia (LDR), sensor de gas, humedad de suelo, o un sensor que Wokwi no tiene (como el de pulso), simulado con un potenciómetro.
 - `DigitalSensor` con `activeLow = true` para un botón conectado entre el pin y GND (usa la resistencia interna de pull-up). Con `false` para un PIR, que entrega HIGH al detectar.
-- `WeightSensor` con el HX711 "50kg" de Wokwi: 420 cuentas por kg es la escala real; 105 simula una plataforma de 200 kg (control en 20 kg = 80 kg).
+- `WeightSensor` con el HX711 "50kg" de Wokwi: 420 cuentas por kg es la escala real; 105 simula una plataforma de 200 kg (control en 20 kg = 80 kg). No espera al HX711 ni hace tara al arrancar: en Wokwi la balanza ya marca 0 con 0 kg, así que el peso siempre corresponde al control.
 - Si `DhtSensor` da error de compilación por `Adafruit_Sensor.h`, agrega también `Adafruit Unified Sensor` en el Library Manager.
 
 ### Actuadores

@@ -47,9 +47,11 @@ Ver [01-crear-proyecto-wokwi.md](01-crear-proyecto-wokwi.md). Sube a Wokwi `Mode
 
 ### Paso 4. Escribe el Device (30 min)
 
-Copia el ejemplo más parecido y cambia lo que corresponda:
-- [`ejemplos/cia-steel-faucet-esp32/CiaSteelFaucetDevice.h`](../ejemplos/cia-steel-faucet-esp32/CiaSteelFaucetDevice.h): ultrasónico, LED, relé con temporizador, reporte periódico.
-- [`ejemplos/smart-lifewatching-uno/SmartLifeWatchingDevice.h`](../ejemplos/smart-lifewatching-uno/SmartLifeWatchingDevice.h): HX711, sensor analógico, 4 LEDs, LCD, niveles bajo/normal/alto.
+Copia el ejemplo más parecido y cambia lo que corresponda. Para el examen conviene partir de la versión mínima ([`ejemplos-minimos/`](../ejemplos-minimos)), que es más corta:
+- [`CiaSteelFaucetDevice.h`](../ejemplos-minimos/cia-steel-faucet-esp32/CiaSteelFaucetDevice.h): ultrasónico, LED, relé con temporizador, reporte periódico (~50 líneas).
+- [`SmartLifeWatchingDevice.h`](../ejemplos-minimos/smart-lifewatching-uno/SmartLifeWatchingDevice.h): HX711, sensor analógico, 4 LEDs, LCD, niveles bajo/normal/alto (~70 líneas).
+
+Las versiones completas, con más funciones auxiliares y mensajes, están en [`ejemplos/`](../ejemplos).
 
 Estructura del Device:
 

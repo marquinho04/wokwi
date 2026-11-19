@@ -40,7 +40,7 @@ Prueba rápida antes de seguir: un `digitalWrite(pin, HIGH)` por cada LED y un `
 | LCD 1602/2004 por I2C | `LiquidCrystal I2C` | `#include <LiquidCrystal_I2C.h>` |
 | DHT22 (temperatura y humedad) | `DHT sensor library` (Adafruit) | `#include <DHT.h>` |
 
-El enunciado 2025-2 dice "hx711 Sensor Library". Busca "hx711" y elige la de Bogdan Necula, porque el código usa su API (`wait_ready_timeout`, `get_units`, `tare`).
+El enunciado 2025-2 dice "hx711 Sensor Library". Busca "hx711" y elige la de Bogdan Necula, porque el código usa su API (`is_ready`, `get_units`, `set_scale`).
 
 ## 1.4 Agregar archivos `.h` y `.cpp`
 
@@ -78,3 +78,6 @@ Wokwi admite varios archivos. Cada clase va en su propio `.h` (declaración) y `
 | `multiple definition of ...` | Un `.h` sin `#ifndef ... #define ... #endif`, o una constante `static const` de tipo clase definida en un `.h` incluido por varios `.cpp` |
 | `fatal error: DHT.h` (o `HX711.h`) | Subiste un archivo del kit cuya librería no agregaste; agrégala o no subas ese archivo |
 | El LED nunca prende | LED al revés: el ánodo (A) va a la resistencia y el pin; el cátodo (C) a GND |
+| La LCD queda en blanco en el Uno | `snprintf` con ancho variable (`%-*s`) no funciona en el Uno; el `LcdDisplay.h` del kit ya lo evita |
+| "SCALE ERROR" aunque el HX711 está bien conectado | Reinicia la simulación con el botón ↻; si sigue, revisa que DT y SCK estén en los pines del código |
+| El peso sale desplazado (por ejemplo, 76.8 kg con el control en 39.2 kg) | Código con tara al arrancar y el control no estaba en 0; usa el `WeightSensor.h` del kit, que no hace tara |

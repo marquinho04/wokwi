@@ -68,9 +68,20 @@ public:
             return; // Fila inválida o texto vacío: se ignora (excepción controlada).
         }
         char padded[MAXIMUM_COLUMNS + 1];
-        // "%-*s" = texto alineado a la izquierda y rellenado con espacios
-        // hasta columnCount caracteres (si es más largo, se recorta).
-        snprintf(padded, columnCount + 1, "%-*s", columnCount, text);
+        int column = 0;
+        // 1. Copia el texto letra por letra, hasta el ancho de la pantalla
+        //    o hasta que el texto termine ('\0' marca el fin de un texto en C).
+        for (; column < columnCount && text[column] != '\0'; column++) {
+            padded[column] = text[column];
+        }
+        // 2. Rellena con espacios el resto de la fila.
+        for (; column < columnCount; column++) {
+            padded[column] = ' ';
+        }
+        // 3. Marca el fin del texto.
+        padded[columnCount] = '\0';
+        // (No se usa snprintf con "%-*s": el Arduino Uno no soporta el "*"
+        //  y dejaría la fila vacía.)
         if (strcmp(padded, lines[row]) != 0) { // strcmp != 0: los textos son distintos.
             strcpy(lines[row], padded);         // Copia al buffer.
             changed[row] = true;                // Pendiente de escribir.

@@ -12,4 +12,6 @@ Qué se simplificó respecto de `ejemplos/`:
 - La consola imprime la empresa y tu nombre en una sola línea, y solo los cambios de estado.
 - Menos funciones auxiliares: casi toda la lógica está en `on()`.
 
+Cada Device está comentado en inglés (listo para entregar). La versión explicada en español está en [`estudio/minimos/`](../estudio/minimos).
+
 En el examen, sube los archivos del kit tal cual y escribe solo el Device y `sketch.ino`.

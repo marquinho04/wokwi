@@ -1,6 +1,6 @@
 # Caso aplicado: Smart LifeWatching (PC2 SI572, 2025-2)
 
-Aplicación de la guía a la PC2 2025-2 (NRC 3355). La solución con el kit genérico está en [ejemplos/smart-lifewatching-uno](../ejemplos/smart-lifewatching-uno) (la placa que pide el enunciado) y [ejemplos/smart-lifewatching-esp32](../ejemplos/smart-lifewatching-esp32).
+Aplicación de la guía a la PC2 2025-2 (NRC 3355). La solución con el kit genérico está en [ejemplos/smart-lifewatching-uno](../ejemplos/smart-lifewatching-uno) (la placa que pide el enunciado) y [ejemplos/smart-lifewatching-esp32](../ejemplos/smart-lifewatching-esp32). La primera versión, más extensa, está en [referencia-extendida/](../referencia-extendida).
 
 ## 1. Resumen del caso
 
