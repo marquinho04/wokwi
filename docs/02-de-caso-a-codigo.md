@@ -35,7 +35,9 @@ Ver [01-crear-proyecto-wokwi.md](01-crear-proyecto-wokwi.md), secciones 1.2 y 1.
 
 ### Paso 3. Copia la plantilla (2 min)
 
-La carpeta [`plantilla/`](../plantilla) tiene las 13 clases que no cambian entre casos: `Event`, `EventHandler`, `Command`, `CommandHandler`, `Sensor`, `Actuator`, `Device`, `Led` y `LcdDisplay`. Súbelas con **Upload file(s)...**. Llévala preparada al examen y entiende cada archivo antes.
+Para el examen usa [`plantilla-compacta/`](../plantilla-compacta): solo 3 archivos (`ModestIoT.h`, `Led.h`, `LcdDisplay.h`), con cada clase completa en su `.h`. Mira el caso resuelto así en [`proyectos-compactos/`](../proyectos-compactos).
+
+La carpeta [`plantilla/`](../plantilla) tiene la versión extendida: las 13 clases que no cambian entre casos: `Event`, `EventHandler`, `Command`, `CommandHandler`, `Sensor`, `Actuator`, `Device`, `Led` y `LcdDisplay`. Súbelas con **Upload file(s)...**. Llévala preparada al examen y entiende cada archivo antes.
 
 ### Paso 4. Una clase por sensor nuevo (15 min)
 
@@ -53,6 +55,8 @@ void TemperatureSensor::processEvent(Event& event) {
     event.identifier = TEMPERATURE_MEASURED_EVENT_IDENTIFIER;
 }
 ```
+
+En la versión compacta el método se llama `read()`: devuelve el identificador del evento y el Device pide la lectura con `sensor.measure()`. Mira [`HeartRateSensor.h`](../proyectos-compactos/arduino-uno/HeartRateSensor.h).
 
 Reglas:
 - Cada sensor define sus propios identificadores de evento (`static const int ..._EVENT_IDENTIFIER`), distintos entre sí.

@@ -17,6 +17,20 @@ Paso a paso para crear bien un proyecto IoT en Wokwi con OOP y el enfoque Modest
 | [caso/README.md](caso/README.md) | Caso Smart LifeWatching: resumen, Pregunta 1 resuelta, decisiones de diseño y pruebas |
 | [proyectos/arduino-uno/](proyectos/arduino-uno) | Proyecto Wokwi completo para Arduino Uno |
 | [proyectos/esp32/](proyectos/esp32) | El mismo proyecto adaptado a ESP32 |
+| [plantilla-compacta/](plantilla-compacta) | **Versión para el examen:** 3 archivos base (`ModestIoT.h`, `Led.h`, `LcdDisplay.h`) |
+| [proyectos-compactos/](proyectos-compactos) | **Versión para el examen:** el mismo caso en 6 `.h` + `sketch.ino`, para Uno y ESP32 |
+
+## ¿Versión completa o compacta?
+
+| | Completa (`proyectos/`) | Compacta (`proyectos-compactos/`) |
+| --- | --- | --- |
+| Archivos de código | 22 (`.h` + `.cpp` por clase) | 7 (todo en `.h` + `sketch.ino`) |
+| Líneas | ~1250 | ~575 |
+| Mismo comportamiento y mismas excepciones | Sí | Sí |
+| Cumple OOP + ModestIoT + title blocks | Sí | Sí |
+| Para qué sirve | Estudiar el patrón con detalle | Escribirlo en los 100 minutos del examen |
+
+En la compacta, `ModestIoT.h` junta las abstracciones (Event, Command, EventHandler, CommandHandler, Sensor, Actuator, Device), cada clase va completa en su `.h` y los comandos se identifican con constantes `int`.
 
 ## Uso rápido
 
