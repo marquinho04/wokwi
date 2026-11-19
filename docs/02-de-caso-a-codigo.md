@@ -1,99 +1,116 @@
-# 2. Del caso al código (OOP + ModestIoT)
+# 2. Del caso al código con el kit genérico
 
-La Pregunta 2 de la PC2 pide un prototipo en Wokwi con programación orientada a objetos "basado en ModestIoT". En la práctica significa:
-
-- Un **Device** que actúa como mediador: tiene los sensores y actuadores, recibe eventos y decide.
-- **Sensors** que leen el hardware y emiten **Events** (`on(Event)`).
-- **Actuators** que ejecutan **Commands** (`handle(Command)`), al estilo CQRS: los eventos informan, los comandos ordenan.
-- Un `sketch.ino` que solo crea el Device y llama `setup()` y `loop()`.
+La Pregunta 2 de la PC2 pide un prototipo en Wokwi con programación orientada a objetos "basado en ModestIoT". Con el [kit genérico](../kit) casi todo ya está escrito. Para un caso nuevo solo escribes **un archivo**: el Device con las reglas del caso, más `sketch.ino` y el circuito.
 
 ```
-Device.loop()  ──MEASURE_DATA_REQUESTED──▶  Sensor.on()  ──(lee hardware)──┐
-      ▲                                                                   │
-      └──────────────── Device.on(WEIGHT_MEASURED / FAULT ...) ◀───────────┘
-Device.on()  ──(regla de negocio)──▶  led.handle(TURN_ON_COMMAND) / display.handle(REFRESH_COMMAND)
+Device.loop() ──(cada X ms)──▶ sensor.measure() ──(lee hardware)──▶ Device.on(Event{sourceId, type})
+Device.on()   ──(regla del caso)──▶ led.setState(...) / relay.setState(...) / display.handle(Command(REFRESH))
 ```
 
-## 2.1 Paso a paso
+- **Sensor:** lee el hardware y avisa al Device con un `Event` que dice qué sensor fue (`sourceId`) y qué pasó (`MEASURED`, `CHANGED`, `FAULT`).
+- **Actuator:** ejecuta un `Command` (`TURN_ON`, `TURN_OFF`, `TOGGLE`, `REFRESH`).
+- **Device:** mediador. Tiene los sensores y actuadores y aplica las reglas en `on(Event)`.
 
-### Paso 1. Extrae los requisitos del caso en una tabla (5 min)
+## 2.1 Receta para cualquier caso (70 min)
 
-Subraya cada número y cada componente del enunciado. Ejemplo con Smart LifeWatching:
+### Paso 1. Tabla de requisitos (5 min)
+
+Subraya cada número y cada componente del enunciado y arma esta tabla. Cada fila será código en `on(Event)` o en `loop()`.
 
 | Entrada (sensor) | Regla | Salida (actuador) |
 | --- | --- | --- |
-| Peso (HX711) | > 80 kg | LED azul de peso encendido |
-| Ritmo cardiaco | < 60 / 60–100 / > 100 PPM | LED azul / verde / rojo |
-| Peso y ritmo | Siempre | LCD 2004: peso, PPM y estado |
-| Arranque | Una vez | Consola: datos de la empresa y tu nombre |
+| Distancia (HC-SR04) | < 10 cm | LED azul encendido |
+| Distancia | Al llegar a < 10 cm | Relé abierto 5 s |
+| — | Cada 2,5 s | Consola: distancia y estado de la válvula |
+| Arranque | Una vez | Consola: empresa y tu nombre |
 
-Cada fila de esta tabla será un `case` en `Device::on()`. Si una fila no queda en el código, pierdes puntos en C03.
+### Paso 2. Elige las clases del kit (2 min)
 
-### Paso 2. Arma y prueba el circuito (10 min)
+| Si el caso tiene... | Usa | Archivo |
+| --- | --- | --- |
+| Potenciómetro, LDR, gas, humedad de suelo, pulso simulado | `AnalogSensor` | `AnalogSensor.h` |
+| Botón, PIR, switch, tilt | `DigitalSensor` | `DigitalSensor.h` |
+| HC-SR04 (distancia) | `UltrasonicSensor` | `UltrasonicSensor.h` |
+| DHT22 (temperatura y humedad) | `DhtSensor` | `DhtSensor.h` |
+| HX711 (peso) | `WeightSensor` | `WeightSensor.h` |
+| LED, relé, buzzer | `Led`, `Relay`, `Buzzer` | `DigitalActuator.h` |
+| LCD 1602 o 2004 por I2C | `LcdDisplay` | `LcdDisplay.h` |
+| "Cada X segundos" | `PeriodicTimer` | `ModestIoT.h` |
+| "Durante X segundos" | `OneShotTimer` | `ModestIoT.h` |
+| "Bajo / normal / alto" | `LevelClassifier` | `ModestIoT.h` |
 
-Ver [01-crear-proyecto-wokwi.md](01-crear-proyecto-wokwi.md), secciones 1.2 y 1.3.
+Detalle de cada clase: [06-kit-generico.md](06-kit-generico.md).
 
-### Paso 3. Copia la plantilla (2 min)
+### Paso 3. Arma y prueba el circuito (10 min)
 
-Para el examen usa [`plantilla-compacta/`](../plantilla-compacta): solo 3 archivos (`ModestIoT.h`, `Led.h`, `LcdDisplay.h`), con cada clase completa en su `.h`. Mira el caso resuelto así en [`proyectos-compactos/`](../proyectos-compactos).
+Ver [01-crear-proyecto-wokwi.md](01-crear-proyecto-wokwi.md). Sube a Wokwi `ModestIoT.h` y solo los archivos del kit que vas a usar: cada uno incluye su librería, y un archivo sin su librería instalada no compila.
 
-La carpeta [`plantilla/`](../plantilla) tiene la versión extendida: las 13 clases que no cambian entre casos: `Event`, `EventHandler`, `Command`, `CommandHandler`, `Sensor`, `Actuator`, `Device`, `Led` y `LcdDisplay`. Súbelas con **Upload file(s)...**. Llévala preparada al examen y entiende cada archivo antes.
+### Paso 4. Escribe el Device (30 min)
 
-### Paso 4. Una clase por sensor nuevo (15 min)
+Copia el ejemplo más parecido y cambia lo que corresponda:
+- [`ejemplos/cia-steel-faucet-esp32/CiaSteelFaucetDevice.h`](../ejemplos/cia-steel-faucet-esp32/CiaSteelFaucetDevice.h): ultrasónico, LED, relé con temporizador, reporte periódico.
+- [`ejemplos/smart-lifewatching-uno/SmartLifeWatchingDevice.h`](../ejemplos/smart-lifewatching-uno/SmartLifeWatchingDevice.h): HX711, sensor analógico, 4 LEDs, LCD, niveles bajo/normal/alto.
 
-Hereda de `Sensor` y escribe la lectura en `processEvent`. Copia `HeartRateSensor` o `WeightSensor` como modelo:
+Estructura del Device:
 
 ```cpp
-void TemperatureSensor::processEvent(Event& event) {
-    if (event.identifier != MEASURE_DATA_REQUESTED_EVENT_IDENTIFIER) return;
-    float reading = dht.readTemperature();
-    if (isnan(reading)) {                       // exception: sensor fault
-        event.identifier = SENSOR_FAULT_EVENT_IDENTIFIER;
-        return;
+class MyDevice : public Device {
+private:
+    // 1. Pines, identificadores de sensor y reglas como constantes con nombre
+    static const int TEMPERATURE_SENSOR_ID = 1;
+    static const int ALARM_LED_PIN = 8;
+    static const int HIGH_TEMPERATURE_IN_CELSIUS = 8;
+
+    // 2. Un objeto por sensor, actuador y temporizador
+    DhtSensor temperatureSensor;
+    Led alarmLed;
+    PeriodicTimer samplingTimer;
+
+public:
+    // 3. Constructor: pasa `this` a los sensores para recibir sus eventos
+    MyDevice()
+        : temperatureSensor(TEMPERATURE_SENSOR_ID, 15, this),
+          alarmLed(ALARM_LED_PIN),
+          samplingTimer(2000) {}
+
+    // 4. setup(): Serial, empresa y tu nombre, begin() de cada componente
+    void setup() override { /* ... */ }
+
+    // 5. loop(): solo temporizadores, sin delay()
+    void loop() override {
+        if (samplingTimer.isDue()) {
+            temperatureSensor.measure();
+        }
     }
-    temperatureInCelsius = reading;
-    event.identifier = TEMPERATURE_MEASURED_EVENT_IDENTIFIER;
-}
+
+    // 6. on(): las reglas del caso, una rama por sensor
+    void on(Event event) override {
+        switch (event.sourceId) {
+            case TEMPERATURE_SENSOR_ID:
+                if (event.type == Event::FAULT) { /* mensaje de error */ }
+                else alarmLed.setState(temperatureSensor.getValue() > HIGH_TEMPERATURE_IN_CELSIUS);
+                break;
+            default:
+                break;
+        }
+    }
+};
 ```
 
-En la versión compacta el método se llama `read()`: devuelve el identificador del evento y el Device pide la lectura con `sensor.measure()`. Mira [`HeartRateSensor.h`](../proyectos-compactos/arduino-uno/HeartRateSensor.h).
+(En el código final, el `15` y el `2000` del constructor también van como constantes con nombre.)
 
-Reglas:
-- Cada sensor define sus propios identificadores de evento (`static const int ..._EVENT_IDENTIFIER`), distintos entre sí.
-- La lectura válida se guarda en un atributo con getter (`getTemperatureInCelsius()`).
-- Si el hardware puede fallar o dar un valor imposible, emite un evento de falla. Eso es lo que la rúbrica llama "responder ante excepciones".
+Reglas que suman puntos:
+- **Excepciones:** maneja siempre `Event::FAULT` con un mensaje en consola y, si hay, en el LCD. Pon los actuadores en un estado seguro.
+- **Cambios de estado:** imprime en consola solo cuando algo cambia (`[STATE] NORMAL -> HIGH`), no cada lectura. Es lo que pide "demostrar los modos de operación y actualización de estado".
+- **Límites exactos:** "60 a 100" incluye 60 y 100 (`LevelClassifier` ya lo hace así). "Mayor a 80" no incluye 80: usa `>`.
+- **Nada de `delay()` en `loop()`:** usa `PeriodicTimer` y `OneShotTimer`.
 
-### Paso 5. Las reglas de negocio en su propia clase (5 min)
-
-Si hay rangos (bajo/normal/alto), crea un `enum class` y un clasificador, como [`HeartRateStatus.h`](../proyectos/arduino-uno/HeartRateStatus.h). Así el Device no queda lleno de `if` y los límites están en constantes con nombre.
-
-Revisa los límites con el texto exacto: "60 a 100" incluye 60 y 100; "mayor a 80" no incluye 80.
-
-Ojo: no llames `LOW` o `HIGH` a un valor del enum, porque Arduino ya los define como macros. Usa `Low` y `High`.
-
-### Paso 6. El Device mediador (20 min)
-
-Copia la estructura de [`SmartLifeWatchingDevice`](../proyectos/arduino-uno/SmartLifeWatchingDevice.cpp):
-
-1. **Atributos:** un objeto por sensor y actuador. Pasa `this` como manejador para que te envíen sus eventos.
-2. **`setup()`:** abre `Serial`, imprime la empresa y tu nombre, y llama `begin()` de cada componente.
-3. **`loop()`:** sin `delay()`. Usa `millis()` para pedir lecturas cada cierto intervalo:
-   ```cpp
-   if (now - lastSamplingTimestamp >= SAMPLING_INTERVAL_IN_MILLISECONDS) {
-       lastSamplingTimestamp = now;
-       weightSensor.on(Sensor::MEASURE_DATA_REQUESTED_EVENT);
-   }
-   ```
-4. **`on(Event)`:** un `switch` por identificador de evento, con una fila de la tabla del Paso 1 por `case`.
-5. **Consola:** imprime cada cambio de estado o modo (`[STATE] NORMAL -> HIGH`), no cada lectura. Es lo que pide "demostrar los modos de operación y actualización de estado".
-6. **Actuadores:** `led.setState(condición)` solo envía el comando si el estado cambia, así evitas comandos repetidos.
-
-### Paso 7. sketch.ino (1 min)
+### Paso 5. sketch.ino (1 min)
 
 ```cpp
-#include "SmartLifeWatchingDevice.h"
+#include "MyDevice.h"
 
-SmartLifeWatchingDevice device;
+MyDevice device;
 
 void setup() {
     device.setup();
@@ -104,35 +121,34 @@ void loop() {
 }
 ```
 
-### Paso 8. Probar los casos límite (10 min)
+### Paso 6. Prueba los casos límite (10 min)
 
-Haz una tabla de prueba (valor exacto del límite, un poco menos, un poco más, falla del sensor) y verifica cada fila en el simulador. Ejemplo: [caso/README.md](../caso/README.md#4-pruebas).
+Por cada regla prueba el valor exacto del límite, uno un poco menor, uno un poco mayor y la falla del sensor. Ejemplos de tablas de prueba: [caso/README.md](../caso/README.md#4-pruebas) y [06-kit-generico.md](06-kit-generico.md#ejemplo-2-cia-steel-faucet-moen-esp32).
 
-### Paso 9. Pulir para C04 y C05 (10 min)
+### Paso 7. Pulido para C04 y C05 (10 min)
 
-- Pon un title block al inicio de **cada** archivo: nombre del archivo, descripción, conexiones, fecha y autor. Formato del Arduino Style Guide:
+- Title block en **cada** archivo, con tu nombre en el campo `By`. Si el caso es de otra empresa, agrégala también:
   ```cpp
   /*
-    Led.h
-    Smart LifeWatching - Embedded Application (Modest IoT based)
+    CiaSteelFaucetDevice.h
+    Cia Steel Faucet - Embedded Application (Modest IoT based)
 
-    LED actuator controlled through TURN_ON / TURN_OFF commands.
+    Touchless faucet: ...
 
     Created 19 November 2025
-    By Juan Perez - Smart LifeMonitor, inc.
+    By Juan Perez - Moen, inc.
   */
   ```
-- Comenta en inglés cada clase y método público (estilo Doxygen `/** @brief ... */`).
-- Nombres en inglés: `PascalCase` para clases, `camelCase` para métodos y variables, `UPPER_SNAKE_CASE` para constantes. Nada de `pinLed1` ni `sensorPeso`.
-- Ningún número suelto en el código: cada pin, umbral e intervalo va como constante con nombre.
-- Borra el código comentado, las variables sin uso y los `delay()` en `loop()`.
+- En los archivos del kit, cambia `Generic IoT kit` por el nombre del dispositivo del caso.
+- Nombres en inglés: `PascalCase` para clases, `camelCase` para métodos y variables, `UPPER_SNAKE_CASE` para constantes.
+- Borra el código comentado y las variables sin uso, y no subas archivos del kit que no uses.
 
 ## 2.2 Por qué esta estructura suma puntos
 
 | Lo que hace el código | Criterio de la rúbrica |
 | --- | --- |
-| Mediador (Device), template method (`processEvent`/`executeCommand`), CQRS (Event/Command) | C04: patrones y buenas prácticas |
-| Clasificador separado y constantes con nombre | C04: sin redundancia ni ineficiencias |
-| Eventos de falla con mensaje en LCD y consola | C03: respuesta ante excepciones |
-| `millis()` en vez de `delay()` | C03/C04: el device sigue respondiendo mientras espera |
+| Mediador (Device), herencia Sensor/Actuator con método `read()`/`handle()` sobrescrito, Event/Command | C04: patrones de arquitectura y de diseño |
+| Una clase por tipo de sensor y actuador | Technical constraint: "clases y objetos para representar... sensors y actuators" |
+| Constantes con nombre, `LevelClassifier` y temporizadores reutilizables | C04: sin redundancia |
+| `Event::FAULT` manejado en cada sensor | C03: respuesta ante excepciones |
 | Nombres en inglés y convenciones consistentes | C05 |

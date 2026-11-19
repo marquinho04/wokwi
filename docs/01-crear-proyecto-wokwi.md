@@ -32,12 +32,13 @@ Prueba rápida antes de seguir: un `digitalWrite(pin, HIGH)` por cada LED y un `
 
 1. En el desplegable de las pestañas de archivos, abre **Library Manager**.
 2. Busca la librería por nombre y agrégala con **+**. Wokwi la escribe en `libraries.txt`.
-3. Las librerías que usan los proyectos de este repositorio:
+3. Las librerías que usa el kit de este repositorio (HC-SR04, LEDs, relé, buzzer, botones y sensores analógicos no necesitan ninguna):
 
 | Componente | Librería en Wokwi | Include |
 | --- | --- | --- |
 | HX711 (celda de carga) | `HX711 Arduino Library` (Bogdan Necula) | `#include "HX711.h"` |
 | LCD 1602/2004 por I2C | `LiquidCrystal I2C` | `#include <LiquidCrystal_I2C.h>` |
+| DHT22 (temperatura y humedad) | `DHT sensor library` (Adafruit) | `#include <DHT.h>` |
 
 El enunciado 2025-2 dice "hx711 Sensor Library". Busca "hx711" y elige la de Bogdan Necula, porque el código usa su API (`wait_ready_timeout`, `get_units`, `tare`).
 
@@ -74,5 +75,6 @@ Wokwi admite varios archivos. Cada clase va en su propio `.h` (declaración) y `
 | El LCD prende pero no muestra texto | Dirección I2C distinta de 0x27, o SDA y SCL cruzados |
 | El LCD no prende | VCC o GND sin conectar; en el ESP32, alimenta el LCD desde `VIN` |
 | El ESP32 no imprime nada | Faltan los cables a `$serialMonitor`, o el baud rate no es 115200 |
-| `multiple definition of ...` | Definiste una constante `static const Command` en el `.h` en vez del `.cpp` |
+| `multiple definition of ...` | Un `.h` sin `#ifndef ... #define ... #endif`, o una constante `static const` de tipo clase definida en un `.h` incluido por varios `.cpp` |
+| `fatal error: DHT.h` (o `HX711.h`) | Subiste un archivo del kit cuya librería no agregaste; agrégala o no subas ese archivo |
 | El LED nunca prende | LED al revés: el ánodo (A) va a la resistencia y el pin; el cátodo (C) a GND |

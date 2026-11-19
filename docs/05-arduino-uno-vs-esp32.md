@@ -1,6 +1,6 @@
 # 5. Arduino Uno vs ESP32 en Wokwi
 
-Las clases (`Device`, `Sensor`, `Actuator`, `Event`, `Command`) son iguales en las dos placas. Solo cambian los pines, la resolución analógica, la consola y `diagram.json`. Compara [`proyectos/arduino-uno`](../proyectos/arduino-uno) con [`proyectos/esp32`](../proyectos/esp32): solo cambian 6 archivos.
+Las clases del [kit](../kit) son iguales en las dos placas: `ModestIoT.h` detecta el ESP32 y ajusta la resolución analógica sola. Solo cambian los pines y el baud rate (en el Device) y `diagram.json`. Compara [`ejemplos/smart-lifewatching-uno`](../ejemplos/smart-lifewatching-uno) con [`ejemplos/smart-lifewatching-esp32`](../ejemplos/smart-lifewatching-esp32): solo cambian 2 archivos.
 
 | Aspecto | Arduino Uno | ESP32 DevKit V1 |
 | --- | --- | --- |
@@ -18,17 +18,25 @@ Las clases (`Device`, `Sensor`, `Actuator`, `Event`, `Command`) son iguales en l
 
 ```cpp
 // Arduino Uno
-static const int HEART_RATE_SENSOR_PIN = A0;
-static const int MAXIMUM_ANALOG_VALUE = 1023;   // 10-bit ADC
+static const int HEART_RATE_PIN = A0;
 static const unsigned long SERIAL_BAUD_RATE = 9600;
 
 // ESP32
-static const int HEART_RATE_SENSOR_PIN = 34;    // ADC1, input only
-static const int MAXIMUM_ANALOG_VALUE = 4095;   // 12-bit ADC
+static const int HEART_RATE_PIN = 34;    // ADC1, input only
 static const unsigned long SERIAL_BAUD_RATE = 115200;
 ```
 
-Si te olvidas del cambio a 4095 en el ESP32, el potenciómetro llega al tope a un cuarto de recorrido y todas tus lecturas salen mal: un error típico de C03.
+La resolución analógica la resuelve `ModestIoT.h`:
+
+```cpp
+#if defined(ESP32)
+static const int ANALOG_MAXIMUM_VALUE = 4095;
+#else
+static const int ANALOG_MAXIMUM_VALUE = 1023;
+#endif
+```
+
+Si escribes tu propio código sin el kit y te olvidas de este cambio, en el ESP32 el potenciómetro llega al tope a un cuarto de recorrido y todas tus lecturas salen mal: un error típico de C03.
 
 ## Consola del ESP32 en `diagram.json`
 
@@ -41,7 +49,7 @@ Si te olvidas del cambio a 4095 en el ESP32, el potenciómetro llega al tope a u
 
 El framework [Modest-IoT-Nano-Framework](https://github.com/modest-iot/modest-iot-nano-framework) (versión 1.1.2, en el Arduino Library Manager) **solo funciona en ESP32** (`architectures=esp32`) y depende de `ArduinoJson` y `MQTT`. Trae su propio `Device` con un motor asíncrono (FreeRTOS y timers), y clases listas como `Led`, `LoadCellAmplifier`, `PulseSensor` y `CharacterLcdDisplay`.
 
-Los proyectos de este repositorio **no usan esa librería**: implementan sus mismas ideas (Device mediador, Sensor/Event, Actuator/Command) en clases propias y livianas. Así:
+El kit y los ejemplos de este repositorio **no usan esa librería**: implementan sus mismas ideas (Device mediador, Sensor/Event, Actuator/Command) en clases propias y livianas. Así:
 
 - el mismo código corre en Uno y en ESP32;
 - se pudo compilar y probar fuera de Wokwi;

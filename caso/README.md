@@ -1,6 +1,6 @@
 # Caso aplicado: Smart LifeWatching (PC2 SI572, 2025-2)
 
-Aplicación de la guía a la PC2 2025-2 (NRC 3355), resuelta en dos versiones: [Arduino Uno](../proyectos/arduino-uno), que es la que pide el enunciado, y [ESP32](../proyectos/esp32), para practicar la otra placa.
+Aplicación de la guía a la PC2 2025-2 (NRC 3355). La solución con el kit genérico está en [ejemplos/smart-lifewatching-uno](../ejemplos/smart-lifewatching-uno) (la placa que pide el enunciado) y [ejemplos/smart-lifewatching-esp32](../ejemplos/smart-lifewatching-esp32). La primera versión, más extensa, está en [referencia-extendida/](../referencia-extendida).
 
 ## 1. Resumen del caso
 
@@ -27,13 +27,13 @@ Technical constraints: Wokwi + Arduino sketch (C++), OOP basado en ModestIoT, `s
 
 ## 3. Pregunta 2: decisiones de diseño
 
-| Clase | Rol | Patrón |
+| Clase (versión con el kit) | Rol | Patrón |
 | --- | --- | --- |
 | `SmartLifeWatchingDevice` | Recibe eventos, aplica las reglas y envía comandos | Mediator |
-| `WeightSensor`, `HeartRateSensor` | Leen el hardware y emiten eventos de medición o de falla | Template method (`processEvent`) |
-| `Led`, `LcdDisplay` | Ejecutan comandos | Template method (`executeCommand`), Command |
-| `HeartRateClassifier` | Reglas < 60 / 60–100 / > 100 | Responsabilidad única |
-| `Event`, `Command` | Objetos de valor que viajan entre componentes | CQRS (separación evento/comando) |
+| `WeightSensor`, `AnalogSensor` (pulso) | Leen el hardware y emiten eventos de medición o de falla | Herencia de `Sensor` con `read()` sobrescrito |
+| `Led`, `LcdDisplay` | Ejecutan comandos | Herencia de `Actuator`, Command |
+| `LevelClassifier(60, 100)` | Reglas < 60 / 60–100 / > 100 | Responsabilidad única, reutilizable |
+| `Event`, `Command` | Objetos de valor que viajan entre componentes | Separación evento/comando (CQRS) |
 
 Dos supuestos que hay que poder explicar:
 
