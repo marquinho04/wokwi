@@ -15,6 +15,7 @@ Guía paso a paso para crear un proyecto IoT en Wokwi con OOP y el enfoque Modes
 | [docs/05-arduino-uno-vs-esp32.md](docs/05-arduino-uno-vs-esp32.md) | Diferencias entre las dos placas |
 | [docs/06-kit-generico.md](docs/06-kit-generico.md) | Referencia del kit: cada clase, su constructor, sus eventos y su librería |
 | [kit/](kit) | **El kit genérico:** 8 archivos `.h` reutilizables en casi cualquier caso |
+| [estudio/](estudio) | **Mismo código del kit y los ejemplos, con comentarios en español** línea por línea. Para estudiar, no para entregar |
 | [ejemplos/](ejemplos) | El kit aplicado a 2 casos: Smart LifeWatching (Uno y ESP32) y Cia Steel Faucet de Moen (ESP32) |
 | [caso/README.md](caso/README.md) | Caso Smart Lifemonitor: Pregunta 1 resuelta, decisiones de diseño y pruebas |
 | [referencia-extendida/](referencia-extendida) | Primera versión de Smart LifeWatching (22 archivos, `.h` + `.cpp`), para estudiar el patrón con más detalle |
