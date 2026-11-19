@@ -1,5 +1,0 @@
-# Wokwi Library List
-# See https://docs.wokwi.com/guides/libraries
-
-HX711 Arduino Library
-LiquidCrystal I2C
