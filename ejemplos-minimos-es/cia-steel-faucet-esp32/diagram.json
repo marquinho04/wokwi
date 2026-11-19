@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "author": "<Developer Full Name> - Moen, inc.",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -170, "left": -60, "attrs": { "distance": "100" } },
+    { "type": "wokwi-led", "id": "led1", "top": 40, "left": 220, "attrs": { "color": "blue", "label": "Hands" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 130, "left": 200, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 200, "left": 220, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "ultrasonic1:VCC", "esp:VIN", "red", [] ],
+    [ "ultrasonic1:GND", "esp:GND.1", "black", [] ],
+    [ "ultrasonic1:TRIG", "esp:D5", "green", [] ],
+    [ "ultrasonic1:ECHO", "esp:D18", "blue", [] ],
+    [ "esp:D4", "r1:1", "blue", [] ],
+    [ "r1:2", "led1:A", "blue", [] ],
+    [ "led1:C", "esp:GND.1", "black", [] ],
+    [ "relay1:VCC", "esp:VIN", "red", [] ],
+    [ "relay1:GND", "esp:GND.2", "black", [] ],
+    [ "relay1:IN", "esp:D23", "orange", [] ]
+  ],
+  "dependencies": {}
+}

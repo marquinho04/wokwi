@@ -18,6 +18,7 @@ Guía paso a paso para crear un proyecto IoT en Wokwi con OOP y el enfoque Modes
 | [estudio/](estudio) | **Mismo código del kit y los ejemplos, con comentarios en español** línea por línea (los ejemplos mínimos, en `estudio/minimos/`). Para estudiar, no para entregar |
 | [ejemplos/](ejemplos) | El kit aplicado a 2 casos: Smart LifeWatching (Uno y ESP32) y Cia Steel Faucet de Moen (ESP32) |
 | [ejemplos-minimos/](ejemplos-minimos) | **Versión para el examen:** los mismos casos con el Device reducido (~50 y ~70 líneas), comentado en inglés |
+| [ejemplos-minimos-es/](ejemplos-minimos-es) | Los mismos proyectos mínimos completos (ESP32 y Uno), **con todos los archivos comentados en español** |
 | [caso/README.md](caso/README.md) | Caso Smart Lifemonitor: Pregunta 1 resuelta, decisiones de diseño y pruebas |
 | [referencia-extendida/](referencia-extendida) | Primera versión de Smart LifeWatching (22 archivos, `.h` + `.cpp`), para estudiar el patrón con más detalle. No incluye las correcciones posteriores de la balanza: para usar en Wokwi, prefiere `kit/` |
 
